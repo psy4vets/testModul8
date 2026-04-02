@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Psy4Vets — Test de Verificare | Modulul 6</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --teal:       #006D77;
+    --teal-mid:   #83C5BE;
+    --teal-light: #E8F4F5;
+    --teal-dark:  #004D56;
+    --amber:      #E76F51;
+    --amber-lt:   #FFF3EF;
+    --red:        #C0392B;
+    --red-lt:     #FEF0EE;
+    --green:      #1A7F5A;
+    --green-lt:   #EAF7F1;
+    --dark:       #1A2E32;
+    --grey:       #4A5568;
+    --grey-lt:    #718096;
+    --white:      #FFFFFF;
+    --off-white:  #F7FAFB;
+    --border:     #D1E8EB;
+    --radius:     14px;
+    --shadow:     0 4px 24px rgba(0,109,119,0.10);
+    --shadow-lg:  0 8px 40px rgba(0,109,119,0.16);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--off-white);
+    color: var(--dark);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* ── BG TEXTURE ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 60% at 10% 0%, rgba(131,197,190,0.18) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 50% at 90% 100%, rgba(0,109,119,0.10) 0%, transparent 55%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── HEADER ── */
+  header {
+    position: relative;
+    z-index: 10;
+    background: var(--teal-dark);
+    padding: 0;
+    overflow: hidden;
+  }
+  .header-inner {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 36px 32px 32px;
+    display: flex;
+    align-items: flex-start;
+    gap: 28px;
+  }
+  .header-logo {
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
+    background: var(--amber);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'DM Serif Display', serif;
+    font-size: 18px;
+    color: white;
+    letter-spacing: -0.5px;
+    line-height: 1;
+    text-align: center;
+  }
+  .header-text h1 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    color: white;
+    line-height: 1.2;
+    margin-bottom: 6px;
+  }
+  .header-text p {
+    font-size: 14px;
+    color: var(--teal-mid);
+    font-weight: 400;
+  }
+  .header-deco {
+    position: absolute;
+    right: -40px;
+    top: -40px;
+    width: 200px;
+    height: 200px;
+    border: 40px solid rgba(131,197,190,0.12);
+    border-radius: 50%;
+    pointer-events: none;
+  }
+
+  /* ── PROGRESS BAR ── */
+  .progress-wrap {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--teal-dark);
+    border-top: 1px solid rgba(255,255,255,0.08);
+  }
+  .progress-bar-bg {
+    height: 4px;
+    background: rgba(255,255,255,0.12);
+  }
+  .progress-bar-fill {
+    height: 100%;
+    background: var(--amber);
+    transition: width 0.5s cubic-bezier(.4,0,.2,1);
+    width: 0%;
+  }
+  .progress-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 8px 32px;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+  .progress-label {
+    font-size: 12px;
+    color: var(--teal-mid);
+    font-weight: 500;
+    letter-spacing: 0.5px;
+  }
+  .progress-count {
+    font-size: 12px;
+    color: rgba(255,255,255,0.5);
+  }
+
+  /* ── MAIN CONTAINER ── */
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 40px 20px 80px;
+  }
+
+  /* ── INTRO SCREEN ── */
+  #screen-intro {
+    animation: fadeUp 0.6s ease both;
+  }
+  .intro-card {
+    background: white;
+    border-radius: 20px;
+    padding: 48px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border);
+  }
+  .intro-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--teal-light);
+    color: var(--teal);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 99px;
+    margin-bottom: 20px;
+  }
+  .intro-badge span { font-size: 14px; }
+  .intro-card h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 36px;
+    color: var(--teal-dark);
+    line-height: 1.15;
+    margin-bottom: 14px;
+  }
+  .intro-card h2 em {
+    color: var(--amber);
+    font-style: italic;
+  }
+  .intro-card .intro-desc {
+    font-size: 16px;
+    color: var(--grey);
+    line-height: 1.7;
+    margin-bottom: 32px;
+  }
+  .intro-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 36px;
+  }
+  .intro-stat {
+    background: var(--off-white);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 16px;
+    text-align: center;
+  }
+  .intro-stat .num {
+    font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    color: var(--teal);
+    display: block;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .intro-stat .lbl {
+    font-size: 12px;
+    color: var(--grey-lt);
+    font-weight: 500;
+  }
+  .intro-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 36px;
+  }
+  .intro-tag {
+    padding: 6px 14px;
+    border-radius: 99px;
+    font-size: 13px;
+    font-weight: 500;
+    border: 1.5px solid;
+  }
+  .tag-a { background: #E8F4F5; color: #006D77; border-color: #83C5BE; }
+  .tag-b { background: #FFF3EF; color: #E76F51; border-color: #F4A58A; }
+  .tag-c { background: #EAF7F1; color: #1A7F5A; border-color: #6ECFA5; }
+  .tag-d { background: #F0F4FF; color: #3B5BDB; border-color: #91A7FF; }
+  .tag-e { background: #FFF8E6; color: #B07A00; border-color: #FFCC4D; }
+  .btn-start {
+    width: 100%;
+    padding: 18px 32px;
+    background: var(--teal);
+    color: white;
+    border: none;
+    border-radius: var(--radius);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+    box-shadow: 0 4px 16px rgba(0,109,119,0.30);
+  }
+  .btn-start:hover {
+    background: var(--teal-dark);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,109,119,0.35);
+  }
+  .btn-start:active { transform: translateY(0); }
+  .btn-arrow { font-size: 18px; transition: transform 0.2s; }
+  .btn-start:hover .btn-arrow { transform: translateX(4px); }
+
+  /* ── QUIZ SCREEN ── */
+  #screen-quiz { display: none; }
+  .question-card {
+    background: white;
+    border-radius: 20px;
+    padding: 40px 44px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border);
+    animation: fadeUp 0.45s ease both;
+  }
+  .q-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+  }
+  .q-num {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--teal);
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .q-category {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    padding: 4px 12px;
+    border-radius: 99px;
+  }
+  .cat-context   { background: var(--teal-light); color: var(--teal); }
+  .cat-anxietate { background: #E8F4F5; color: #006D77; }
+  .cat-depresie  { background: #EEF2FF; color: #3B5BDB; }
+  .cat-adhd      { background: var(--amber-lt); color: var(--amber); }
+  .cat-tsa       { background: var(--green-lt); color: var(--green); }
+  .cat-etică     { background: #F3F0FF; color: #7048E8; }
+
+  .q-text {
+    font-family: 'DM Serif Display', serif;
+    font-size: 21px;
+    color: var(--dark);
+    line-height: 1.45;
+    margin-bottom: 28px;
+  }
+  .options-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 28px;
+  }
+  .option-btn {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+    border: 2px solid var(--border);
+    border-radius: 12px;
+    background: var(--off-white);
+    cursor: pointer;
+    text-align: left;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    color: var(--grey);
+    font-weight: 400;
+    transition: border-color 0.18s, background 0.18s, color 0.18s, transform 0.12s;
+    position: relative;
+  }
+  .option-btn:hover:not(.locked) {
+    border-color: var(--teal-mid);
+    background: var(--teal-light);
+    color: var(--teal-dark);
+    transform: translateX(4px);
+  }
+  .option-letter {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: white;
+    border: 1.5px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--grey-lt);
+    flex-shrink: 0;
+    transition: background 0.18s, border-color 0.18s, color 0.18s;
+  }
+  .option-btn:hover:not(.locked) .option-letter {
+    background: var(--teal);
+    border-color: var(--teal);
+    color: white;
+  }
+  /* States after answer */
+  .option-btn.correct {
+    border-color: var(--green);
+    background: var(--green-lt);
+    color: var(--green);
+    transform: none;
+  }
+  .option-btn.correct .option-letter {
+    background: var(--green);
+    border-color: var(--green);
+    color: white;
+  }
+  .option-btn.wrong {
+    border-color: var(--red);
+    background: var(--red-lt);
+    color: var(--red);
+    transform: none;
+  }
+  .option-btn.wrong .option-letter {
+    background: var(--red);
+    border-color: var(--red);
+    color: white;
+  }
+  .option-btn.dimmed {
+    opacity: 0.42;
+  }
+  .option-btn.locked { cursor: default; }
+  .option-icon {
+    margin-left: auto;
+    font-size: 18px;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .option-btn.correct .option-icon,
+  .option-btn.wrong .option-icon { opacity: 1; }
+
+  /* Explanation box */
+  .explanation {
+    margin-top: 18px;
+    padding: 16px 20px;
+    border-radius: 12px;
+    font-size: 14px;
+    line-height: 1.65;
+    color: var(--grey);
+    display: none;
+    animation: fadeUp 0.3s ease both;
+  }
+  .explanation.show { display: flex; gap: 12px; align-items: flex-start; }
+  .explanation.correct-exp {
+    background: var(--green-lt);
+    border: 1.5px solid #A3E6C8;
+    color: #155E42;
+  }
+  .explanation.wrong-exp {
+    background: var(--red-lt);
+    border: 1.5px solid #FAC5BE;
+    color: #7B2020;
+  }
+  .exp-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .exp-text strong { display: block; font-weight: 600; margin-bottom: 3px; }
+
+  /* Next button */
+  .btn-next {
+    display: none;
+    width: 100%;
+    padding: 15px 28px;
+    background: var(--teal);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.15s;
+    margin-top: 16px;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .btn-next.visible {
+    display: flex;
+    animation: fadeUp 0.3s 0.1s ease both;
+  }
+  .btn-next:hover { background: var(--teal-dark); transform: translateY(-1px); }
+
+  /* ── RESULTS SCREEN ── */
+  #screen-results { display: none; }
+  .results-card {
+    background: white;
+    border-radius: 20px;
+    padding: 48px;
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border);
+    animation: fadeUp 0.6s ease both;
+  }
+  .results-header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .score-ring-wrap {
+    position: relative;
+    width: 140px;
+    height: 140px;
+    margin: 0 auto 24px;
+  }
+  .score-ring {
+    transform: rotate(-90deg);
+    width: 140px;
+    height: 140px;
+  }
+  .ring-bg { fill: none; stroke: var(--teal-light); stroke-width: 10; }
+  .ring-fill {
+    fill: none;
+    stroke-width: 10;
+    stroke-linecap: round;
+    stroke-dasharray: 376;
+    stroke-dashoffset: 376;
+    transition: stroke-dashoffset 1.2s cubic-bezier(.4,0,.2,1) 0.3s;
+  }
+  .ring-score {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .ring-score .big {
+    font-family: 'DM Serif Display', serif;
+    font-size: 38px;
+    line-height: 1;
+    color: var(--teal-dark);
+  }
+  .ring-score .small {
+    font-size: 12px;
+    color: var(--grey-lt);
+    font-weight: 500;
+  }
+  .results-header h2 {
+    font-family: 'DM Serif Display', serif;
+    font-size: 30px;
+    color: var(--teal-dark);
+    margin-bottom: 8px;
+  }
+  .results-header p {
+    font-size: 15px;
+    color: var(--grey);
+    line-height: 1.6;
+    max-width: 480px;
+    margin: 0 auto;
+  }
+
+  /* Category scores */
+  .cat-scores {
+    margin-bottom: 36px;
+  }
+  .cat-scores h3 {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--grey-lt);
+    margin-bottom: 14px;
+  }
+  .cat-bar {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .cat-bar-label {
+    width: 110px;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--grey);
+    flex-shrink: 0;
+  }
+  .cat-bar-track {
+    flex: 1;
+    height: 8px;
+    background: var(--off-white);
+    border-radius: 99px;
+    overflow: hidden;
+    border: 1px solid var(--border);
+  }
+  .cat-bar-fill {
+    height: 100%;
+    border-radius: 99px;
+    transition: width 1s cubic-bezier(.4,0,.2,1) 0.5s;
+    width: 0%;
+  }
+  .cat-bar-pct {
+    width: 32px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--grey-lt);
+    text-align: right;
+    flex-shrink: 0;
+  }
+
+  /* Review accordion */
+  .review-section { margin-bottom: 32px; }
+  .review-section h3 {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: var(--grey-lt);
+    margin-bottom: 14px;
+  }
+  .review-item {
+    border: 1.5px solid var(--border);
+    border-radius: 12px;
+    margin-bottom: 8px;
+    overflow: hidden;
+  }
+  .review-toggle {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 18px;
+    cursor: pointer;
+    background: white;
+    transition: background 0.15s;
+    width: 100%;
+    border: none;
+    font-family: inherit;
+    text-align: left;
+  }
+  .review-toggle:hover { background: var(--off-white); }
+  .review-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .dot-correct { background: var(--green); }
+  .dot-wrong { background: var(--red); }
+  .review-q {
+    font-size: 14px;
+    color: var(--grey);
+    flex: 1;
+    line-height: 1.4;
+  }
+  .review-chevron {
+    font-size: 11px;
+    color: var(--grey-lt);
+    transition: transform 0.2s;
+  }
+  .review-item.open .review-chevron { transform: rotate(180deg); }
+  .review-body {
+    display: none;
+    padding: 0 18px 16px;
+    background: var(--off-white);
+    border-top: 1.5px solid var(--border);
+  }
+  .review-item.open .review-body { display: block; }
+  .review-your-ans {
+    margin-top: 12px;
+    font-size: 13px;
+    color: var(--grey);
+    margin-bottom: 4px;
+  }
+  .review-your-ans span { font-weight: 600; }
+  .review-correct-ans {
+    font-size: 13px;
+    color: var(--green);
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .review-exp {
+    font-size: 13px;
+    color: var(--grey);
+    line-height: 1.6;
+    background: white;
+    border-radius: 8px;
+    padding: 10px 14px;
+    border: 1px solid var(--border);
+  }
+
+  /* Retry button */
+  .btn-retry {
+    width: 100%;
+    padding: 16px 28px;
+    background: var(--off-white);
+    color: var(--teal);
+    border: 2px solid var(--teal-mid);
+    border-radius: 12px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .btn-retry:hover {
+    background: var(--teal-light);
+    border-color: var(--teal);
+  }
+
+  /* ── ANIMATIONS ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pop {
+    0%   { transform: scale(1); }
+    40%  { transform: scale(1.06); }
+    100% { transform: scale(1); }
+  }
+  .pop { animation: pop 0.3s ease; }
+
+  /* ── FOOTER ── */
+  footer {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+    padding: 24px 20px 36px;
+    font-size: 12px;
+    color: var(--grey-lt);
+  }
+  footer a { color: var(--teal); text-decoration: none; }
+
+  /* ── RESPONSIVE ── */
+  @media (max-width: 600px) {
+    .header-inner { padding: 24px 20px 20px; }
+    .intro-card, .question-card, .results-card { padding: 28px 22px; }
+    .intro-grid { grid-template-columns: repeat(3, 1fr); gap: 8px; }
+    .intro-stat .num { font-size: 22px; }
+    .q-text { font-size: 18px; }
+    .progress-info { padding: 8px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-logo">P4V</div>
+    <div class="header-text">
+      <h1>Test de verificare a cunoștințelor</h1>
+      <p>Modulul 6 — Recunoașterea clienților cu tulburări posibile &nbsp;·&nbsp; www.psy4vets.com</p>
+    </div>
+  </div>
+  <div class="header-deco"></div>
+</header>
+
+<div class="progress-wrap">
+  <div class="progress-bar-bg">
+    <div class="progress-bar-fill" id="progressBar"></div>
+  </div>
+  <div class="progress-info">
+    <span class="progress-label" id="progressLabel">Pregătit să începi?</span>
+    <span class="progress-count" id="progressCount"></span>
+  </div>
+</div>
+
+<main>
+
+  <!-- INTRO SCREEN -->
+  <div id="screen-intro">
+    <div class="intro-card">
+      <div class="intro-badge"><span>🧠</span> Psy4Vets · Modul 6</div>
+      <h2>Cât de bine recunoști<br><em>semnele</em> în cabinet?</h2>
+      <p class="intro-desc">
+        Acest test verifică cunoștințele dobândite în Modulul 6 — despre recunoașterea și comunicarea adaptată cu clienți care pot prezenta anxietate, depresie, ADHD sau Tulburare de Spectru Autist. Răspunde sincer; la final vei primi feedback detaliat.
+      </p>
+      <div class="intro-grid">
+        <div class="intro-stat">
+          <span class="num">10</span>
+          <span class="lbl">Întrebări</span>
+        </div>
+        <div class="intro-stat">
+          <span class="num">~8</span>
+          <span class="lbl">Minute</span>
+        </div>
+        <div class="intro-stat">
+          <span class="num">5</span>
+          <span class="lbl">Categorii</span>
+        </div>
+      </div>
+      <div class="intro-tags">
+        <span class="intro-tag tag-a">Anxietate</span>
+        <span class="intro-tag tag-b">Depresie</span>
+        <span class="intro-tag tag-c">ADHD</span>
+        <span class="intro-tag tag-d">TSA</span>
+        <span class="intro-tag tag-e">Etică profesională</span>
+      </div>
+      <button class="btn-start" onclick="startQuiz()">
+        Începe testul <span class="btn-arrow">→</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- QUIZ SCREEN -->
+  <div id="screen-quiz">
+    <div class="question-card" id="questionCard">
+      <div class="q-header">
+        <div class="q-num" id="qNum">1</div>
+        <span class="q-category" id="qCategory">Context</span>
+      </div>
+      <p class="q-text" id="qText"></p>
+      <div class="options-list" id="optionsList"></div>
+      <div class="explanation" id="explanation">
+        <span class="exp-icon" id="expIcon"></span>
+        <div class="exp-text" id="expText"></div>
+      </div>
+      <button class="btn-next" id="btnNext" onclick="nextQuestion()">
+        <span id="btnNextLabel">Întrebarea următoare</span> <span>→</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- RESULTS SCREEN -->
+  <div id="screen-results">
+    <div class="results-card">
+      <div class="results-header">
+        <div class="score-ring-wrap">
+          <svg class="score-ring" viewBox="0 0 140 140">
+            <circle class="ring-bg" cx="70" cy="70" r="60"/>
+            <circle class="ring-fill" id="ringFill" cx="70" cy="70" r="60"/>
+          </svg>
+          <div class="ring-score">
+            <span class="big" id="scoreNum">0</span>
+            <span class="small">din 10</span>
+          </div>
+        </div>
+        <h2 id="resultsTitle">Rezultate</h2>
+        <p id="resultsDesc"></p>
+      </div>
+
+      <div class="cat-scores">
+        <h3>Scor pe categorii</h3>
+        <div id="catBars"></div>
+      </div>
+
+      <div class="review-section">
+        <h3>Revizuiește răspunsurile</h3>
+        <div id="reviewList"></div>
+      </div>
+
+      <button class="btn-retry" onclick="retryQuiz()">↺ Reia testul</button>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <p>© 2025 <a href="https://www.psy4vets.com" target="_blank">Psy4Vets</a> — Material de formare profesională pentru medicina veterinară</p>
+</footer>
+
+<script>
+const QUESTIONS = [
+  {
+    id: 1,
+    category: "Context",
+    catClass: "cat-context",
+    text: "La nivel global, câți adulți trăiesc cu o tulburare mintală diagnosticabilă, conform OMS (2022)?",
+    options: ["1 din 10", "1 din 5", "1 din 3", "1 din 20"],
+    correct: 1,
+    explanation: {
+      correct: "Exact! Conform OMS (2022), aproximativ 1 din 5 adulți trăiește cu o tulburare mintală diagnosticabilă — ceea ce înseamnă că o proporție semnificativă din clientela oricărui cabinet veterinar se confruntă cu astfel de provocări.",
+      wrong: "Răspunsul corect este 1 din 5. Conform OMS (2022), aproximativ 20% din adulți trăiesc cu o tulburare mintală diagnosticabilă — o cifră cu implicații directe pentru practica veterinară."
+    }
+  },
+  {
+    id: 2,
+    category: "Comorbiditate",
+    catClass: "cat-context",
+    text: "Un client vine la consultație și prezintă atât semnale de anxietate, cât și comportamente asociate ADHD. Ce este cel mai adecvat să gândești?",
+    options: [
+      "Probabil exagerează sau simulează",
+      "Comorbiditatea este frecventă — poate prezenta ambele tulburări simultan",
+      "Trebuie să stabilesc cu exactitate ce tulburare are înainte de a comunica",
+      "Nu este treaba mea — eu mă ocup de animal"
+    ],
+    correct: 1,
+    explanation: {
+      correct: "Corect. Comorbiditatea este regula, nu excepția. Conform Capp et al. (2025), 50–60% din persoanele cu ADHD au și simptome anxioase semnificative. Nu este nevoie să 'diagnostichezi' — răspunsul empatic contează.",
+      wrong: "Comorbiditatea este extrem de frecventă. Conform Capp et al. (2025), peste jumătate din persoanele cu ADHD au și simptome anxioase. Nu trebuie să stabilești un diagnostic — comportamentul empatic și adaptat este suficient."
+    }
+  },
+  {
+    id: 3,
+    category: "Anxietate",
+    catClass: "cat-anxietate",
+    text: "Un client îți solicită a patra garanție în decurs de 10 minute că pisica sa este sănătoasă, deși toate rezultatele sunt normale. Ce răspuns este cel mai adecvat?",
+    options: [
+      "'Nu mai ai de ce să fii îngrijorat/ă, totul e bine!'",
+      "Ignori cererea — ai explicat deja suficient",
+      "Validezi emoția și oferi pași concreți: 'Înțeleg că ești îngrijorat/ă. Vom monitoriza X și te sun dacă apare Y.'",
+      "Îl trimiți la alt medic — nu ai timp pentru astfel de clienți"
+    ],
+    correct: 2,
+    explanation: {
+      correct: "Perfect. Validarea emoției ('Înțeleg că ești îngrijorat/ă') urmată de pași concreți este tehnica de bază pentru clienții anxioși. Oferirea de garanții false sau ignorarea cererii amplifică anxietatea.",
+      wrong: "Răspunsul corect este validarea emoției + pași concreți. 'Nu ai de ce să fii îngrijorat/ă' invalidează emoția. Ignorarea sau trimiterea la alt medic deteriorează relația terapeutică cu clientul anxios."
+    }
+  },
+  {
+    id: 4,
+    category: "Anxietate",
+    catClass: "cat-anxietate",
+    text: "Ce este tehnica 'Teach-Back' în comunicarea medicală?",
+    options: [
+      "A repeta informațiile de 3 ori pentru memorare mai bună",
+      "A scrie instrucțiunile pe o foaie și a o înmâna clientului",
+      "A ruga clientul să explice cu propriile cuvinte ce urmează să facă acasă",
+      "A trimite un email de follow-up după consultație"
+    ],
+    correct: 2,
+    explanation: {
+      correct: "Corect! Teach-Back înseamnă a ruga clientul să explice cu propriile cuvinte ce a înțeles. Nu este un test — este o metodă de a verifica dacă informația a fost corect înțeleasă și de a corecta în timp util. Deosebit de utilă pentru clienții cu ADHD.",
+      wrong: "Teach-Back înseamnă a ruga clientul să explice el însuși ce urmează să facă. De exemplu: 'Înainte să pleci, poți să-mi spui de câte ori pe zi vei administra medicamentul?' Este mai eficientă decât repetarea sau înmânarea unui bilet."
+    }
+  },
+  {
+    id: 5,
+    category: "Depresie",
+    catClass: "cat-depresie",
+    text: "Un client spune: 'Fluffy e singurul de care mă mai îngrijesc. Fără el, nu mai are sens să trăiesc.' Ce faci?",
+    options: [
+      "Îi spui că animalul e bine și închizi subiectul — nu e problema ta",
+      "Notezi în fișă că este dramatic și continui consultația",
+      "Întrebi direct și calm: 'Te gândești că nu mai vrei să trăiești?' și, dacă da, îl pui în contact cu ajutor înainte să plece",
+      "Suni imediat familia fără să îl întrebi"
+    ],
+    correct: 2,
+    explanation: {
+      correct: "Exact. Întrebarea directă despre ideația suicidară NU crește riscul — dimpotrivă, îl reduce. Dacă răspunsul este afirmativ, nu lăsa persoana singură și pune-o în contact cu ajutor înainte să plece (Linia SNSPMS: 0800 800 000).",
+      wrong: "Afirmația 'nu mai are sens să trăiesc' este un semnal clar care nu trebuie ignorat. Trebuie să întrebi direct și calm, să nu lași persoana singură dacă confirmă, și să o pui în contact cu ajutor specializat. Soluția corectă este C."
+    }
+  },
+  {
+    id: 6,
+    category: "Depresie",
+    catClass: "cat-depresie",
+    text: "Care este diferența esențială dintre doliu și depresie în contextul pierderii unui animal?",
+    options: [
+      "Doliul apare doar după moartea unui om, nu a unui animal",
+      "Doliul este o reacție normală; dacă se prelungește excesiv sau apar gânduri autolitice, poate indica depresie și necesită atenție suplimentară",
+      "Depresia se vindecă de la sine, doliul necesită terapie",
+      "Nu există nicio diferență clinică relevantă"
+    ],
+    correct: 1,
+    explanation: {
+      correct: "Corect. Doliul după un animal de companie este o reacție autentică și normală. Devine îngrijorător dacă se prelungește excesiv, afectează grav funcționarea zilnică sau dacă apar gânduri autolitice — moment în care este nevoie de orientare spre suport specializat.",
+      wrong: "Doliul după un animal este o reacție normală și autentică. Diferența esențială: dacă doliul se prelungește excesiv, afectează grav funcționarea sau apar gânduri autolitice, poate indica o tulburare depresivă și necesită atenție și referire."
+    }
+  },
+  {
+    id: 7,
+    category: "ADHD",
+    catClass: "cat-adhd",
+    text: "Un client cu ADHD nu a respectat schema de tratament a animalului (a uitat să dea medicamentul de mai multe ori). Care este cel mai probabil motiv?",
+    options: [
+      "Nu îi pasă de animal",
+      "Nu a înțeles că tratamentul este important",
+      "Dezacord cu diagnosticul pus de tine",
+      "Dificultăți de organizare și memorie specifice ADHD — nu indiferență"
+    ],
+    correct: 3,
+    explanation: {
+      correct: "Exact. Uitarea tratamentului la persoanele cu ADHD este cauzată de dificultăți reale de organizare și memorie — nu de indiferență față de animal. Răspunsul corect este empatie non-judecativă și oferirea de soluții concrete: instrucțiuni scrise, alarme pe telefon, pași simpli.",
+      wrong: "Uitarea la persoanele cu ADHD nu este indiferență. Este cauzată de dificultăți reale de organizare și memorie. Abordarea corectă: empatie ('Se mai întâmplă. Bine că ai venit.') și soluții concrete (instrucțiuni scrise, pași numerotați)."
+    }
+  },
+  {
+    id: 8,
+    category: "TSA",
+    catClass: "cat-tsa",
+    text: "Un client evită contactul vizual pe toată durata consultației. Interpretarea cea mai corectă este:",
+    options: [
+      "Clientul minte sau ascunde ceva",
+      "Clientului nu îi pasă de animal",
+      "Este o caracteristică posibil asociată TSA sau altor diferențe neurologice — nu indiferență sau necinste",
+      "Clientul este supărat pe tine din cauza unei experiențe anterioare"
+    ],
+    correct: 2,
+    explanation: {
+      correct: "Corect. Evitarea contactului vizual este o caracteristică frecventă la persoanele cu TSA și alte diferențe neurologice. Nu trebuie interpretată ca indiferență, minciună sau supărare. Nu forța contactul vizual — aceasta creează disconfort.",
+      wrong: "Evitarea contactului vizual este o trăsătură frecventă în TSA, nu un semn de minciună sau indiferență. Răspunsul corect este C. A forța contactul vizual sau a interpreta greșit semnalul poate deteriora comunicarea cu clientul."
+    }
+  },
+  {
+    id: 9,
+    category: "TSA",
+    catClass: "cat-tsa",
+    text: "Un client cu posibilă TSA insistă că tot ce s-a schimbat față de consultația anterioară (altă sala, alt medic, altă ordine a pașilor) este inacceptabil. Ce faci?",
+    options: [
+      "Îi explici că este irațional și că trebuie să fie flexibil",
+      "Anulezi consultația și îl programezi altă dată",
+      "Anunți schimbarea cu calm, explici raționalul și, pe viitor, trimiți în scris ce se va întâmpla la consultație",
+      "Îl ignori și continui consultația ca de obicei"
+    ],
+    correct: 2,
+    explanation: {
+      correct: "Excelent. Persoanele cu TSA au nevoie de predictibilitate. Dacă ceva s-a schimbat, anunță calm și explică de ce. Pe termen lung: trimite informații scrise înainte de consultație, rezervă același cabinet și orar dacă e posibil.",
+      wrong: "Persoanele cu TSA au nevoie de rutine și predictibilitate. Soluția corectă este C: anunță schimbarea cu calm și explică raționalul. Pe viitor, trimite informații în scris înainte de consultație pentru a reduce surprizele."
+    }
+  },
+  {
+    id: 10,
+    category: "Etică",
+    catClass: "cat-etică",
+    text: "Care dintre afirmațiile următoare descrie cel mai corect rolul medicului veterinar față de sănătatea mintală a clienților?",
+    options: [
+      "Medicul veterinar trebuie să ofere consiliere psihologică clienților în distres",
+      "Medicul veterinar observă semnale, adaptează comunicarea și orientează spre ajutor specializat — fără a depăși rolul profesional",
+      "Sănătatea mintală a clienților nu este relevantă pentru practica veterinară",
+      "Dacă un client pare deprimat, trebuie să contactezi familia acestuia"
+    ],
+    correct: 1,
+    explanation: {
+      correct: "Perfect. Rolul medicului veterinar NU include diagnosticul sau consilierea psihologică. Include: observarea semnalelor, adaptarea comunicării, oferirea unui mediu sigur și empatic, și orientarea spre resurse specializate când este cazul.",
+      wrong: "Rolul corect este B. Medicul veterinar nu diagnostichează și nu oferă terapie — dar observă semnale, adaptează comunicarea și orientează clientul spre ajutor specializat. A contacta familia fără acordul clientului ridică probleme etice serioase."
+    }
+  }
+];
+
+const CATEGORY_COLORS = {
+  "Context":    "#006D77",
+  "Comorbiditate": "#006D77",
+  "Anxietate":  "#1A8C9B",
+  "Depresie":   "#3B5BDB",
+  "ADHD":       "#E76F51",
+  "TSA":        "#1A7F5A",
+  "Etică":      "#7048E8"
+};
+
+let currentQ = 0;
+let answers  = [];
+let answered = false;
+
+function startQuiz() {
+  currentQ = 0;
+  answers = [];
+  answered = false;
+  document.getElementById('screen-intro').style.display = 'none';
+  document.getElementById('screen-quiz').style.display  = 'block';
+  renderQuestion();
+}
+
+function renderQuestion() {
+  answered = false;
+  const q = QUESTIONS[currentQ];
+  const total = QUESTIONS.length;
+
+  // Progress
+  const pct = (currentQ / total) * 100;
+  document.getElementById('progressBar').style.width = pct + '%';
+  document.getElementById('progressLabel').textContent = `Întrebarea ${currentQ + 1} din ${total}`;
+  document.getElementById('progressCount').textContent =
+    answers.filter(a => a.correct).length + ' corecte până acum';
+
+  // Card
+  document.getElementById('qNum').textContent = currentQ + 1;
+  const catEl = document.getElementById('qCategory');
+  catEl.textContent = q.category;
+  catEl.className = 'q-category ' + q.catClass;
+  document.getElementById('qText').textContent = q.text;
+
+  // Options
+  const list = document.getElementById('optionsList');
+  list.innerHTML = '';
+  const letters = ['A', 'B', 'C', 'D'];
+  q.options.forEach((opt, i) => {
+    const btn = document.createElement('button');
+    btn.className = 'option-btn';
+    btn.innerHTML = `
+      <span class="option-letter">${letters[i]}</span>
+      <span class="option-text">${opt}</span>
+      <span class="option-icon" id="icon-${i}"></span>
+    `;
+    btn.onclick = () => selectAnswer(i);
+    list.appendChild(btn);
+  });
+
+  // Reset explanation & next
+  const exp = document.getElementById('explanation');
+  exp.className = 'explanation';
+  exp.style.display = 'none';
+  const btnNext = document.getElementById('btnNext');
+  btnNext.className = 'btn-next';
+  document.getElementById('btnNextLabel').textContent =
+    currentQ < total - 1 ? 'Întrebarea următoare' : 'Vezi rezultatele';
+
+  // Re-animate card
+  const card = document.getElementById('questionCard');
+  card.style.animation = 'none';
+  void card.offsetWidth;
+  card.style.animation = 'fadeUp 0.4s ease both';
+}
+
+function selectAnswer(idx) {
+  if (answered) return;
+  answered = true;
+
+  const q = QUESTIONS[currentQ];
+  const isCorrect = idx === q.correct;
+  const letters = ['A', 'B', 'C', 'D'];
+  const optBtns = document.querySelectorAll('.option-btn');
+
+  optBtns.forEach((btn, i) => {
+    btn.classList.add('locked');
+    if (i === q.correct) {
+      btn.classList.add('correct');
+      btn.querySelector('.option-icon').textContent = '✓';
+    } else if (i === idx && !isCorrect) {
+      btn.classList.add('wrong');
+      btn.querySelector('.option-icon').textContent = '✗';
+    } else if (i !== q.correct) {
+      btn.classList.add('dimmed');
+    }
+  });
+
+  // Explanation
+  const exp = document.getElementById('explanation');
+  exp.style.display = 'flex';
+  exp.className = 'explanation show ' + (isCorrect ? 'correct-exp' : 'wrong-exp');
+  document.getElementById('expIcon').textContent = isCorrect ? '✓' : '✗';
+  document.getElementById('expText').innerHTML =
+    `<strong>${isCorrect ? 'Corect!' : 'Nu chiar.'}</strong>${isCorrect ? q.explanation.correct : q.explanation.wrong}`;
+
+  // Pop animation on correct
+  if (isCorrect) {
+    optBtns[q.correct].classList.add('pop');
+    setTimeout(() => optBtns[q.correct].classList.remove('pop'), 350);
+  }
+
+  // Record answer
+  answers.push({
+    qIdx: currentQ,
+    chosen: idx,
+    correct: isCorrect,
+    category: q.category,
+    chosenText: q.options[idx],
+    correctText: q.options[q.correct]
+  });
+
+  // Show next
+  document.getElementById('btnNext').classList.add('visible');
+}
+
+function nextQuestion() {
+  currentQ++;
+  if (currentQ < QUESTIONS.length) {
+    renderQuestion();
+  } else {
+    showResults();
+  }
+}
+
+function showResults() {
+  document.getElementById('screen-quiz').style.display = 'none';
+  const screen = document.getElementById('screen-results');
+  screen.style.display = 'block';
+
+  // Progress bar full
+  document.getElementById('progressBar').style.width = '100%';
+  document.getElementById('progressLabel').textContent = 'Test finalizat!';
+  document.getElementById('progressCount').textContent = '';
+
+  const score = answers.filter(a => a.correct).length;
+  const pct = score / QUESTIONS.length;
+
+  // Score ring
+  document.getElementById('scoreNum').textContent = score;
+  setTimeout(() => {
+    const circumference = 2 * Math.PI * 60; // ~376.99
+    const offset = circumference * (1 - pct);
+    const ring = document.getElementById('ringFill');
+    ring.style.strokeDashoffset = offset;
+    // Color based on score
+    if (pct >= 0.8)      ring.style.stroke = '#1A7F5A';
+    else if (pct >= 0.6) ring.style.stroke = '#E76F51';
+    else                 ring.style.stroke = '#C0392B';
+  }, 100);
+
+  // Title & desc
+  let title, desc;
+  if (pct >= 0.9) {
+    title = "Excelent! Cunoștințele tale sunt solide.";
+    desc = `Ai răspuns corect la ${score} din 10 întrebări. Demonstrezi o înțelegere profundă a subiectului și ești pregătit/ă să aplici aceste competențe în practica veterinară.`;
+  } else if (pct >= 0.7) {
+    title = "Bun! Mai sunt câteva zone de consolidat.";
+    desc = `Ai răspuns corect la ${score} din 10 întrebări. Ai o bază solidă — revizuiește capitolele cu scor mai mic pentru a consolida înțelegerea.`;
+  } else if (pct >= 0.5) {
+    title = "Progres bun — continuă să exersezi.";
+    desc = `Ai răspuns corect la ${score} din 10 întrebări. Recomandăm reluarea materialului de curs și retestarea după câteva zile.`;
+  } else {
+    title = "Este recomandat să reiei materialul.";
+    desc = `Ai răspuns corect la ${score} din 10 întrebări. Revizuiește cu atenție modulul și revin la test — înțelegerea acestor subiecte are impact direct în practica ta.`;
+  }
+  document.getElementById('resultsTitle').textContent = title;
+  document.getElementById('resultsDesc').textContent = desc;
+
+  // Category bars
+  const cats = {};
+  QUESTIONS.forEach(q => {
+    const c = q.category;
+    if (!cats[c]) cats[c] = { total: 0, correct: 0 };
+    cats[c].total++;
+  });
+  answers.forEach(a => {
+    const c = QUESTIONS[a.qIdx].category;
+    if (a.correct) cats[c].correct++;
+  });
+
+  const catBars = document.getElementById('catBars');
+  catBars.innerHTML = '';
+  Object.entries(cats).forEach(([cat, data]) => {
+    const p = data.correct / data.total;
+    const color = CATEGORY_COLORS[cat] || '#006D77';
+    catBars.innerHTML += `
+      <div class="cat-bar">
+        <span class="cat-bar-label">${cat}</span>
+        <div class="cat-bar-track">
+          <div class="cat-bar-fill" style="background:${color}" data-pct="${p * 100}"></div>
+        </div>
+        <span class="cat-bar-pct">${data.correct}/${data.total}</span>
+      </div>
+    `;
+  });
+  setTimeout(() => {
+    document.querySelectorAll('.cat-bar-fill').forEach(el => {
+      el.style.width = el.dataset.pct + '%';
+    });
+  }, 200);
+
+  // Review list
+  const reviewList = document.getElementById('reviewList');
+  reviewList.innerHTML = '';
+  answers.forEach((a, i) => {
+    const q = QUESTIONS[a.qIdx];
+    const isC = a.correct;
+    reviewList.innerHTML += `
+      <div class="review-item" id="review-${i}">
+        <button class="review-toggle" onclick="toggleReview(${i})">
+          <span class="review-dot ${isC ? 'dot-correct' : 'dot-wrong'}"></span>
+          <span class="review-q">${i + 1}. ${q.text.substring(0, 80)}${q.text.length > 80 ? '…' : ''}</span>
+          <span class="review-chevron">▼</span>
+        </button>
+        <div class="review-body">
+          <div class="review-your-ans">Răspunsul tău: <span style="color:${isC ? '#1A7F5A' : '#C0392B'}">${a.chosenText}</span></div>
+          ${!isC ? `<div class="review-correct-ans">✓ Răspuns corect: ${a.correctText}</div>` : ''}
+          <div class="review-exp">${isC ? q.explanation.correct : q.explanation.wrong}</div>
+        </div>
+      </div>
+    `;
+  });
+}
+
+function toggleReview(idx) {
+  const item = document.getElementById('review-' + idx);
+  item.classList.toggle('open');
+}
+
+function retryQuiz() {
+  document.getElementById('screen-results').style.display = 'none';
+  document.getElementById('screen-intro').style.display  = 'block';
+  document.getElementById('progressBar').style.width = '0%';
+  document.getElementById('progressLabel').textContent = 'Pregătit să începi?';
+  document.getElementById('progressCount').textContent = '';
+  // Reset ring
+  document.getElementById('ringFill').style.strokeDashoffset = '376';
+}
+</script>
+</body>
+</html>
